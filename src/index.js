@@ -58,33 +58,46 @@ const dataButtonsEn = [
   { id: 'AltLeft', value: 'Alt' },
   { id: 'Space', value: ' ' },
   { id: 'AltRight', value: 'Alt' },
-  // { id: 'ContextMenu', value: 'ContextMenu' },
   { id: 'ControlRight', value: 'Ctrl' },
   { id: 'ArrowLeft', value: '◄' },
-
   { id: 'ArrowDown', value: '▼' },
   { id: 'ArrowRight', value: '►' },
   { id: 'Delete', value: 'Del' },
 ];
 
-function renderKeyboard(data) {
-  const keyboard = document.createElement('div');
-  keyboard.className = 'keyboard';
+function renderElements() {
   const container = document.createElement('div');
   container.className = 'container';
   document.body.append(container);
+
+  const title = document.createElement('h1');
+  title.className = 'title';
+  title.textContent = 'Virtual Keyboard';
+  container.append(title);
+
+  const subtitle = document.createElement('h3');
+  subtitle.className = 'subtitle';
+  subtitle.textContent = 'Keyboard for Windows. For switching language: press left Shift + Alt ';
+  container.append(subtitle);
+
+  const textArea = document.createElement('textarea');
+  textArea.className = 'textarea';
+  container.append(textArea);
+
+  const keyboard = document.createElement('div');
+  keyboard.className = 'keyboard';
   container.append(keyboard);
+}
+
+renderElements();
+
+const TEXT_AREA = document.querySelector('.textarea');
+
+function renderButtons(data) {
+  const keyboard = document.querySelector('.keyboard');
   data.forEach((el) => {
     const keyButton = document.createElement('div');
-
-    if (
-      el.id === 'Backspace' ||
-      el.id === 'Tab' ||
-      el.id === 'ShiftRight' ||
-      el.id === 'ShiftLeft' ||
-      el.id === 'CapsLock' ||
-      el.id === 'Enter'
-    ) {
+    if (el.id === 'Backspace' || el.id === 'Tab' || el.id === 'ShiftRight' || el.id === 'ShiftLeft' || el.id === 'CapsLock' || el.id === 'Enter') {
       keyButton.className = `key key-large ${el.id}`;
     } else if (el.id === 'Space') {
       keyButton.className = `key key-space ${el.id}`;
@@ -96,20 +109,7 @@ function renderKeyboard(data) {
   });
 }
 
-renderKeyboard(dataButtonsEn);
-
-function renderTextArea() {
-  const textArea = document.createElement('textarea');
-  textArea.className = 'textarea';
-  document.querySelector('.container').append(textArea);
-}
-
-renderTextArea();
-
-function textAreaHandler(symbol) {
-  const textArea = document.querySelector('.textarea');
-  textArea.value += symbol.textContent;
-}
+renderButtons(dataButtonsEn);
 
 function keyClickHandler() {
   const key = document.querySelectorAll('.key');
@@ -129,17 +129,37 @@ function keyClickHandler() {
       }
     });
   });
-
   key.forEach((el) => {
     el.addEventListener('mousedown', () => {
-      document.querySelector('.textarea').focus();
-      textAreaHandler(el);
       el.classList.add('key-active');
     });
-  });
-
-  key.forEach((el) => {
     el.addEventListener('mouseup', () => {
+      const start = TEXT_AREA.selectionStart;
+      if (el.classList.contains('Enter')) {
+        const breakLne = '\n';
+        TEXT_AREA.value = TEXT_AREA.value.substring(0, TEXT_AREA.selectionStart)
+        + breakLne + TEXT_AREA.value.substring(TEXT_AREA.selectionEnd, TEXT_AREA.value.length);
+        TEXT_AREA.selectionStart = start + 1;
+        TEXT_AREA.selectionEnd = start + 1;
+        TEXT_AREA.focus();
+      } else if (el.classList.contains('Backspace')) {
+        TEXT_AREA.value = TEXT_AREA.value.substring(0, TEXT_AREA.selectionStart - 1)
+        + TEXT_AREA.value.substring(TEXT_AREA.selectionStart, TEXT_AREA.value.length);
+        TEXT_AREA.selectionStart = start - 1;
+        TEXT_AREA.selectionEnd = start - 1;
+        TEXT_AREA.focus();
+      } else if (el.classList.contains('Space')) {
+        TEXT_AREA.setRangeText(' ', TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+        TEXT_AREA.focus();
+      } else {
+        TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+        // console.log(start);
+        TEXT_AREA.focus();
+      }
+      el.classList.remove('key-active');
+    });
+
+    el.addEventListener('mouseout', () => {
       el.classList.remove('key-active');
     });
   });

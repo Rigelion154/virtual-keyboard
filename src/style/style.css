@@ -80,3 +80,10 @@ textarea {
   font-size: 18px;
   overflow: auto;
 }
+
+.upper-case {
+  text-transform: uppercase;
+}
+.lower-case {
+  text-transform: lowercase;
+}

@@ -77,7 +77,7 @@ function renderElements() {
 
   const subtitle = document.createElement('h3');
   subtitle.className = 'subtitle';
-  subtitle.textContent = 'Keyboard for Windows. For switching language: press left Shift + Alt ';
+  subtitle.textContent = 'Keyboard for Windows. For switching language: press left ctrl + alt';
   container.append(subtitle);
 
   const textArea = document.createElement('textarea');
@@ -97,14 +97,15 @@ function renderButtons(data) {
   const keyboard = document.querySelector('.keyboard');
   data.forEach((el) => {
     const keyButton = document.createElement('div');
+    keyButton.className = `key ${el.id}`;
     if (el.id === 'Backspace' || el.id === 'Tab' || el.id === 'ShiftRight' || el.id === 'ShiftLeft' || el.id === 'CapsLock' || el.id === 'Enter') {
-      keyButton.className = `key key-large ${el.id}`;
-    } else if (el.id === 'Space') {
-      keyButton.className = `key key-space ${el.id}`;
-    } else {
-      keyButton.className = `key ${el.id}`;
+      keyButton.className += ' key-large';
     }
+    if (el.id === 'Space') keyButton.className += ' key-space';
+    if (el.id[0] === 'K') keyButton.className += ' character';
+
     keyButton.textContent = el.value;
+
     keyboard.append(keyButton);
   });
 }
@@ -115,30 +116,100 @@ function keyClickHandler() {
   const key = document.querySelectorAll('.key');
   window.addEventListener('keydown', (e) => {
     key.forEach((el) => {
+      if (e.code === 'AltLeft' || e.code === 'AltRight') {
+        if (el.classList.contains('AltLeft') || el.classList.contains('AltRight')) {
+          e.preventDefault();
+          TEXT_AREA.setRangeText('', TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+          TEXT_AREA.focus();
+        }
+      }
+      if (e.code === 'ArrowLeft') {
+        if (el.classList.contains('ArrowLeft')) {
+          e.preventDefault();
+          TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+          TEXT_AREA.focus();
+        }
+      }
+      if (e.code === 'ArrowRight') {
+        if (el.classList.contains('ArrowRight')) {
+          e.preventDefault();
+          TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+          TEXT_AREA.focus();
+        }
+      }
+      if (e.code === 'ArrowDown') {
+        if (el.classList.contains('ArrowDown')) {
+          e.preventDefault();
+          TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+          TEXT_AREA.focus();
+        }
+      }
+      if (e.code === 'ArrowUp') {
+        if (el.classList.contains('ArrowUp')) {
+          e.preventDefault();
+          TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+          TEXT_AREA.focus();
+        }
+      }
+      if (e.code === 'Tab') {
+        if (el.classList.contains('Tab')) {
+          e.preventDefault();
+          TEXT_AREA.setRangeText('    ', TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+          TEXT_AREA.focus();
+        }
+      }
+      if (e.code === 'CapsLock') {
+        if (el.classList.contains('CapsLock')) el.classList.toggle('key-active');
+        if (el.classList.contains('character')) el.classList.toggle('upper-case');
+      }
+
+      if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+        if (el.classList.contains('character')) el.classList.add('upper-case');
+      }
       if (el.classList.contains(e.code)) {
-        el.classList.add('key-active');
+        if (!el.classList.contains('CapsLock')) {
+          el.classList.add('key-active');
+        }
         document.querySelector('.textarea').focus();
+        if (el.classList.contains('upper-case')) {
+          e.preventDefault();
+          TEXT_AREA.setRangeText(el.textContent.toUpperCase(), TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+          TEXT_AREA.focus();
+        }
       }
     });
   });
 
   window.addEventListener('keyup', (e) => {
     key.forEach((el) => {
+      if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+        if (el.classList.contains('character')) el.classList.remove('upper-case');
+      }
       if (el.classList.contains(e.code)) {
-        el.classList.remove('key-active');
+        if (!el.classList.contains('CapsLock')) {
+          el.classList.remove('key-active');
+        }
       }
     });
   });
+
   key.forEach((el) => {
     el.addEventListener('mousedown', () => {
-      el.classList.add('key-active');
+      if (!el.classList.contains('CapsLock')) {
+        el.classList.add('key-active');
+      }
+      if (el.classList.contains('ShiftLeft') || el.classList.contains('ShiftRight')) {
+        key.forEach((elem) => {
+          if (elem.classList.contains('character')) elem.classList.add('upper-case');
+        });
+      }
     });
     el.addEventListener('mouseup', () => {
       const start = TEXT_AREA.selectionStart;
+      const breakLne = '\n';
       if (el.classList.contains('Enter')) {
-        const breakLne = '\n';
-        TEXT_AREA.value = TEXT_AREA.value.substring(0, TEXT_AREA.selectionStart)
-        + breakLne + TEXT_AREA.value.substring(TEXT_AREA.selectionEnd, TEXT_AREA.value.length);
+        TEXT_AREA.value = TEXT_AREA.value.substring(0, TEXT_AREA.selectionStart) + breakLne
+        + TEXT_AREA.value.substring(TEXT_AREA.selectionEnd, TEXT_AREA.value.length);
         TEXT_AREA.selectionStart = start + 1;
         TEXT_AREA.selectionEnd = start + 1;
         TEXT_AREA.focus();
@@ -148,19 +219,51 @@ function keyClickHandler() {
         TEXT_AREA.selectionStart = start - 1;
         TEXT_AREA.selectionEnd = start - 1;
         TEXT_AREA.focus();
+      } else if (el.classList.contains('Delete')) {
+        TEXT_AREA.value = TEXT_AREA.value.substring(0, TEXT_AREA.selectionStart)
+        + TEXT_AREA.value.substring(TEXT_AREA.selectionStart + 1, TEXT_AREA.value.length);
+        TEXT_AREA.selectionStart = start;
+        TEXT_AREA.selectionEnd = start;
+        TEXT_AREA.focus();
+        // TEXT_AREA.value = TEXT_AREA.value.replace(/\n/g, '');
       } else if (el.classList.contains('Space')) {
         TEXT_AREA.setRangeText(' ', TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
         TEXT_AREA.focus();
+      } else if (el.classList.contains('Tab')) {
+        TEXT_AREA.setRangeText('    ', TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+        TEXT_AREA.focus();
+      } else if (el.classList.contains('CapsLock') || el.classList.contains('ShiftLeft') || el.classList.contains('ShiftRight')) {
+        TEXT_AREA.setRangeText('', TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+        TEXT_AREA.focus();
+      } else if (el.classList.contains('upper-case')) {
+        TEXT_AREA.setRangeText(el.textContent.toUpperCase(), TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+        TEXT_AREA.focus();
       } else {
         TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
-        // console.log(start);
         TEXT_AREA.focus();
       }
-      el.classList.remove('key-active');
+      if (!el.classList.contains('CapsLock')) {
+        el.classList.remove('key-active');
+      }
+      if (el.classList.contains('ShiftLeft') || el.classList.contains('ShiftRight')) {
+        key.forEach((elem) => {
+          elem.classList.remove('upper-case');
+        });
+      }
     });
 
+    el.addEventListener('click', () => {
+      if (el.classList.contains('CapsLock')) {
+        key.forEach((elem) => {
+          if (elem.classList.contains('character')) elem.classList.toggle('upper-case');
+        });
+        el.classList.toggle('key-active');
+      }
+    });
     el.addEventListener('mouseout', () => {
-      el.classList.remove('key-active');
+      if (!el.classList.contains('CapsLock')) {
+        el.classList.remove('key-active');
+      }
     });
   });
 }

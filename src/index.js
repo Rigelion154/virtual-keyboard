@@ -1,17 +1,17 @@
 const dataButtonsEn = [
-  { id: 'Backquote', value: '`' },
-  { id: 'Digit1', value: '1' },
-  { id: 'Digit2', value: '2' },
-  { id: 'Digit3', value: '3' },
-  { id: 'Digit4', value: '4' },
-  { id: 'Digit5', value: '5' },
-  { id: 'Digit6', value: '6' },
-  { id: 'Digit7', value: '7' },
-  { id: 'Digit8', value: '8' },
-  { id: 'Digit9', value: '9' },
-  { id: 'Digit0', value: '0' },
-  { id: 'Minus', value: '-' },
-  { id: 'Equal', value: '=' },
+  { id: 'Backquote', value: '`', alt: '~' },
+  { id: 'Digit1', value: '1', alt: '!' },
+  { id: 'Digit2', value: '2', alt: '@' },
+  { id: 'Digit3', value: '3', alt: '#' },
+  { id: 'Digit4', value: '4', alt: '$' },
+  { id: 'Digit5', value: '5', alt: '%' },
+  { id: 'Digit6', value: '6', alt: '^' },
+  { id: 'Digit7', value: '7', alt: '&' },
+  { id: 'Digit8', value: '8', alt: '*' },
+  { id: 'Digit9', value: '9', alt: '(' },
+  { id: 'Digit0', value: '0', alt: ')' },
+  { id: 'Minus', value: '-', alt: '_' },
+  { id: 'Equal', value: '=', alt: '+' },
   { id: 'Backspace', value: 'Backspace' },
   { id: 'Tab', value: 'Tab' },
   { id: 'KeyQ', value: 'q' },
@@ -24,9 +24,9 @@ const dataButtonsEn = [
   { id: 'KeyI', value: 'i' },
   { id: 'KeyO', value: 'o' },
   { id: 'KeyP', value: 'p' },
-  { id: 'BracketLeft', value: '[' },
-  { id: 'BracketRight', value: ']' },
-  { id: 'Backslash', value: '\\' },
+  { id: 'BracketLeft', value: '[', alt: '{' },
+  { id: 'BracketRight', value: ']', alt: '}' },
+  { id: 'Backslash', value: '\\', alt: '|' },
   { id: 'CapsLock', value: 'CapsLock' },
   { id: 'KeyA', value: 'a' },
   { id: 'KeyS', value: 's' },
@@ -37,20 +37,20 @@ const dataButtonsEn = [
   { id: 'KeyJ', value: 'j' },
   { id: 'KeyK', value: 'k' },
   { id: 'KeyL', value: 'l' },
-  { id: 'Semicolon', value: ';' },
-  { id: 'Quote', value: "'" },
+  { id: 'Semicolon', value: ';', alt: ':' },
+  { id: 'Quote', value: "'", alt: '"' },
   { id: 'Enter', value: 'Enter' },
   { id: 'ShiftLeft', value: 'Shift' },
-  { id: 'KeyZ', value: 'z' },
+  { id: 'KeyZ', value: 'z', ru: 'я' },
   { id: 'KeyX', value: 'x' },
   { id: 'KeyC', value: 'c' },
   { id: 'KeyV', value: 'v' },
   { id: 'KeyB', value: 'b' },
   { id: 'KeyN', value: 'n' },
   { id: 'KeyM', value: 'm' },
-  { id: 'Comma', value: ',' },
-  { id: 'Period', value: '.' },
-  { id: 'Slash', value: '/' },
+  { id: 'Comma', value: ',', alt: '<' },
+  { id: 'Period', value: '.', alt: '>' },
+  { id: 'Slash', value: '/', alt: '?' },
   { id: 'ArrowUp', value: '▲' },
   { id: 'ShiftRight', value: 'Shift' },
   { id: 'ControlLeft', value: 'Ctrl' },
@@ -62,7 +62,7 @@ const dataButtonsEn = [
   { id: 'ArrowLeft', value: '◄' },
   { id: 'ArrowDown', value: '▼' },
   { id: 'ArrowRight', value: '►' },
-  { id: 'Delete', value: 'Del' },
+  { id: 'Delete', value: 'Del', alt: 'Del' },
 ];
 
 function renderElements() {
@@ -95,27 +95,69 @@ const TEXT_AREA = document.querySelector('.textarea');
 
 function renderButtons(data) {
   const keyboard = document.querySelector('.keyboard');
+
   data.forEach((el) => {
     const keyButton = document.createElement('div');
+    const keySpanButton = document.createElement('span');
+    const keySpanAlt = document.createElement('span');
+    keySpanAlt.className = `${el.id} alt hidden`;
+    keySpanButton.className = `${el.id}`;
     keyButton.className = `key ${el.id}`;
     if (el.id === 'Backspace' || el.id === 'Tab' || el.id === 'ShiftRight' || el.id === 'ShiftLeft' || el.id === 'CapsLock' || el.id === 'Enter') {
       keyButton.className += ' key-large';
     }
+    if (el.id === 'Backspace' || el.id === 'Tab' || el.id === 'ShiftRight' || el.id === 'ShiftLeft' || el.id === 'CapsLock' || el.id === 'Enter') {
+      keySpanButton.className += ' key-large';
+    }
     if (el.id === 'Space') keyButton.className += ' key-space';
-    if (el.id[0] === 'K') keyButton.className += ' character';
-
-    keyButton.textContent = el.value;
-
+    if (el.id === 'Space') keySpanButton.className += ' key-space';
+    if (el.id[0] === 'K') keySpanButton.className += ' character';
+    if (
+      el.id[0] === 'D' || el.id === 'Backquote' || el.id === 'Minus' || el.id === 'Equal' || el.id === 'BracketLeft' || el.id === 'BracketRight'
+      || el.id === 'Backslash' || el.id === 'Semicolon' || el.id === 'Quote' || el.id === 'Comma' || el.id === 'Period' || el.id === 'Slash'
+    ) {
+      keySpanButton.className = `${el.id} main`;
+      keySpanAlt.textContent = el.alt;
+      keyButton.append(keySpanAlt);
+    }
+    keySpanButton.textContent = el.value;
+    keyButton.append(keySpanButton);
     keyboard.append(keyButton);
   });
 }
 
 renderButtons(dataButtonsEn);
 
-function keyClickHandler() {
-  const key = document.querySelectorAll('.key');
+function keyDownClickHandler() {
+  const keySpan = document.querySelectorAll('span');
+  // const key = document.querySelectorAll('div');
   window.addEventListener('keydown', (e) => {
-    key.forEach((el) => {
+    TEXT_AREA.focus();
+    keySpan.forEach((el) => {
+      if (
+        el.classList.contains(e.code) && !el.classList.contains('hidden') && !el.classList.contains('upper-case') && e.code !== 'CapsLock' && e.code !== 'AltLeft'
+        && e.code !== 'AltRight' && e.code !== 'ShiftLeft' && e.code !== 'ShiftRight' && e.code !== 'Tab' && e.code !== 'Delete' && e.code !== 'MetaLeft'
+        && e.code !== 'Enter' && e.code !== 'ControlLeft' && e.code !== 'ControlRight' && e.code !== 'Backspace'
+      ) {
+        e.preventDefault();
+        TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+        TEXT_AREA.focus();
+      }
+
+      if (el.classList.contains(e.code) && !el.classList.contains('hidden') && el.classList.contains('upper-case')) {
+        e.preventDefault();
+        TEXT_AREA.setRangeText(el.textContent.toUpperCase(), TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+        TEXT_AREA.focus();
+      }
+
+      if (e.code === 'Tab') {
+        if (el.classList.contains('Tab')) {
+          e.preventDefault();
+          TEXT_AREA.setRangeText('  ', TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+          TEXT_AREA.focus();
+        }
+      }
+
       if (e.code === 'AltLeft' || e.code === 'AltRight') {
         if (el.classList.contains('AltLeft') || el.classList.contains('AltRight')) {
           e.preventDefault();
@@ -123,68 +165,41 @@ function keyClickHandler() {
           TEXT_AREA.focus();
         }
       }
-      if (e.code === 'ArrowLeft') {
-        if (el.classList.contains('ArrowLeft')) {
-          e.preventDefault();
-          TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
-          TEXT_AREA.focus();
-        }
-      }
-      if (e.code === 'ArrowRight') {
-        if (el.classList.contains('ArrowRight')) {
-          e.preventDefault();
-          TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
-          TEXT_AREA.focus();
-        }
-      }
-      if (e.code === 'ArrowDown') {
-        if (el.classList.contains('ArrowDown')) {
-          e.preventDefault();
-          TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
-          TEXT_AREA.focus();
-        }
-      }
-      if (e.code === 'ArrowUp') {
-        if (el.classList.contains('ArrowUp')) {
-          e.preventDefault();
-          TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
-          TEXT_AREA.focus();
-        }
-      }
-      if (e.code === 'Tab') {
-        if (el.classList.contains('Tab')) {
-          e.preventDefault();
-          TEXT_AREA.setRangeText('    ', TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
-          TEXT_AREA.focus();
-        }
-      }
+
       if (e.code === 'CapsLock') {
-        if (el.classList.contains('CapsLock')) el.classList.toggle('key-active');
         if (el.classList.contains('character')) el.classList.toggle('upper-case');
       }
-
       if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
         if (el.classList.contains('character')) el.classList.add('upper-case');
+        if (el.classList.contains('main')) el.classList.add('hidden');
+        if (el.classList.contains('alt')) el.classList.remove('hidden');
       }
+    });
+    keySpan.forEach((el) => {
       if (el.classList.contains(e.code)) {
         if (!el.classList.contains('CapsLock')) {
           el.classList.add('key-active');
         }
-        document.querySelector('.textarea').focus();
-        if (el.classList.contains('upper-case')) {
-          e.preventDefault();
-          TEXT_AREA.setRangeText(el.textContent.toUpperCase(), TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
-          TEXT_AREA.focus();
-        }
+      }
+      if (e.code === 'CapsLock') {
+        if (el.classList.contains('CapsLock')) el.classList.toggle('key-active');
       }
     });
   });
+}
 
+function keyUpClickHandler() {
+  const keySpan = document.querySelectorAll('span');
+  // const key = document.querySelectorAll('div');
   window.addEventListener('keyup', (e) => {
-    key.forEach((el) => {
+    keySpan.forEach((el) => {
       if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
         if (el.classList.contains('character')) el.classList.remove('upper-case');
+        if (el.classList.contains('main')) el.classList.remove('hidden');
+        if (el.classList.contains('alt')) el.classList.add('hidden');
       }
+    });
+    keySpan.forEach((el) => {
       if (el.classList.contains(e.code)) {
         if (!el.classList.contains('CapsLock')) {
           el.classList.remove('key-active');
@@ -192,74 +207,114 @@ function keyClickHandler() {
       }
     });
   });
+}
+
+keyUpClickHandler();
+keyDownClickHandler();
+
+function mouseUpClickHandler() {
+  const key = document.querySelectorAll('span');
+  const char = document.querySelectorAll('.character');
+  const main = document.querySelectorAll('.main');
+  const alt = document.querySelectorAll('.alt');
 
   key.forEach((el) => {
-    el.addEventListener('mousedown', () => {
-      if (!el.classList.contains('CapsLock')) {
-        el.classList.add('key-active');
-      }
-      if (el.classList.contains('ShiftLeft') || el.classList.contains('ShiftRight')) {
-        key.forEach((elem) => {
-          if (elem.classList.contains('character')) elem.classList.add('upper-case');
-        });
-      }
-    });
     el.addEventListener('mouseup', () => {
       const start = TEXT_AREA.selectionStart;
       const breakLne = '\n';
+      if (
+        !el.classList.contains('upper-case') && !el.classList.contains('Enter') && !el.classList.contains('Backspace') && !el.classList.contains('Delete')
+        && !el.classList.contains('Space') && !el.classList.contains('Tab') && !el.classList.contains('CapsLock') && !el.classList.contains('ShiftLeft')
+        && !el.classList.contains('ShiftRight') && !el.classList.contains('AltLeft') && !el.classList.contains('AltRight')
+        && !el.classList.contains('ControlLeft') && !el.classList.contains('ControlRight') && !el.classList.contains('MetaLeft')
+      ) {
+        TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+        TEXT_AREA.focus();
+      }
+
+      if (el.classList.contains('upper-case')) {
+        TEXT_AREA.setRangeText(el.textContent.toUpperCase(), TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
+        TEXT_AREA.focus();
+      }
+
       if (el.classList.contains('Enter')) {
-        TEXT_AREA.value = TEXT_AREA.value.substring(0, TEXT_AREA.selectionStart) + breakLne
-        + TEXT_AREA.value.substring(TEXT_AREA.selectionEnd, TEXT_AREA.value.length);
+        TEXT_AREA.value = TEXT_AREA.value.substring(0, TEXT_AREA.selectionStart)
+        + breakLne + TEXT_AREA.value.substring(TEXT_AREA.selectionEnd, TEXT_AREA.value.length);
         TEXT_AREA.selectionStart = start + 1;
         TEXT_AREA.selectionEnd = start + 1;
         TEXT_AREA.focus();
-      } else if (el.classList.contains('Backspace')) {
+      }
+
+      if (el.classList.contains('Backspace')) {
         TEXT_AREA.value = TEXT_AREA.value.substring(0, TEXT_AREA.selectionStart - 1)
         + TEXT_AREA.value.substring(TEXT_AREA.selectionStart, TEXT_AREA.value.length);
         TEXT_AREA.selectionStart = start - 1;
         TEXT_AREA.selectionEnd = start - 1;
         TEXT_AREA.focus();
-      } else if (el.classList.contains('Delete')) {
+      }
+
+      if (el.classList.contains('Delete')) {
         TEXT_AREA.value = TEXT_AREA.value.substring(0, TEXT_AREA.selectionStart)
         + TEXT_AREA.value.substring(TEXT_AREA.selectionStart + 1, TEXT_AREA.value.length);
         TEXT_AREA.selectionStart = start;
         TEXT_AREA.selectionEnd = start;
         TEXT_AREA.focus();
-        // TEXT_AREA.value = TEXT_AREA.value.replace(/\n/g, '');
-      } else if (el.classList.contains('Space')) {
+      }
+
+      if (el.classList.contains('Space')) {
         TEXT_AREA.setRangeText(' ', TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
         TEXT_AREA.focus();
-      } else if (el.classList.contains('Tab')) {
+      }
+
+      if (el.classList.contains('Tab')) {
         TEXT_AREA.setRangeText('    ', TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
         TEXT_AREA.focus();
-      } else if (el.classList.contains('CapsLock') || el.classList.contains('ShiftLeft') || el.classList.contains('ShiftRight')) {
-        TEXT_AREA.setRangeText('', TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
-        TEXT_AREA.focus();
-      } else if (el.classList.contains('upper-case')) {
-        TEXT_AREA.setRangeText(el.textContent.toUpperCase(), TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
-        TEXT_AREA.focus();
-      } else {
-        TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
-        TEXT_AREA.focus();
       }
+      if (el.classList.contains('CapsLock')) {
+        char.forEach((ch) => {
+          ch.classList.toggle('upper-case');
+        });
+      }
+      if (el.classList.contains('ShiftLeft') || el.classList.contains('ShiftRight')) {
+        char.forEach((ch) => {
+          ch.classList.remove('upper-case');
+        });
+        main.forEach((mn) => {
+          mn.classList.remove('hidden');
+        });
+        alt.forEach((al) => {
+          al.classList.add('hidden');
+        });
+      }
+
       if (!el.classList.contains('CapsLock')) {
         el.classList.remove('key-active');
       }
+    });
+
+    el.addEventListener('mousedown', () => {
+      if (!el.classList.contains('CapsLock')) {
+        el.classList.add('key-active');
+      }
       if (el.classList.contains('ShiftLeft') || el.classList.contains('ShiftRight')) {
-        key.forEach((elem) => {
-          elem.classList.remove('upper-case');
+        char.forEach((ch) => {
+          ch.classList.add('upper-case');
+        });
+        main.forEach((mn) => {
+          mn.classList.add('hidden');
+        });
+        alt.forEach((al) => {
+          al.classList.remove('hidden');
         });
       }
     });
 
     el.addEventListener('click', () => {
       if (el.classList.contains('CapsLock')) {
-        key.forEach((elem) => {
-          if (elem.classList.contains('character')) elem.classList.toggle('upper-case');
-        });
         el.classList.toggle('key-active');
       }
     });
+
     el.addEventListener('mouseout', () => {
       if (!el.classList.contains('CapsLock')) {
         el.classList.remove('key-active');
@@ -267,5 +322,4 @@ function keyClickHandler() {
     });
   });
 }
-
-keyClickHandler();
+mouseUpClickHandler();

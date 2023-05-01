@@ -14,42 +14,69 @@ const dataButtonsEn = [
   { id: 'Equal', value: '=', alt: '+' },
   { id: 'Backspace', value: 'Backspace' },
   { id: 'Tab', value: 'Tab' },
-  { id: 'KeyQ', value: 'q' },
-  { id: 'KeyW', value: 'w' },
-  { id: 'KeyE', value: 'e' },
-  { id: 'KeyR', value: 'r' },
-  { id: 'KeyT', value: 't' },
-  { id: 'KeyY', value: 'y' },
-  { id: 'KeyU', value: 'u' },
-  { id: 'KeyI', value: 'i' },
-  { id: 'KeyO', value: 'o' },
-  { id: 'KeyP', value: 'p' },
-  { id: 'BracketLeft', value: '[', alt: '{' },
-  { id: 'BracketRight', value: ']', alt: '}' },
+  { id: 'KeyQ', value: 'q', ru: 'й' },
+  { id: 'KeyW', value: 'w', ru: 'ц' },
+  { id: 'KeyE', value: 'e', ru: 'у' },
+  { id: 'KeyR', value: 'r', ru: 'к' },
+  { id: 'KeyT', value: 't', ru: 'е' },
+  { id: 'KeyY', value: 'y', ru: 'н' },
+  { id: 'KeyU', value: 'u', ru: 'г' },
+  { id: 'KeyI', value: 'i', ru: 'ш' },
+  { id: 'KeyO', value: 'o', ru: 'щ' },
+  { id: 'KeyP', value: 'p', ru: 'з' },
+  {
+    id: 'BracketLeft',
+    value: '[',
+    alt: '{',
+    ru: 'х',
+  },
+  {
+    id: 'BracketRight',
+    value: ']',
+    alt: '}',
+    ru: 'ъ',
+  },
   { id: 'Backslash', value: '\\', alt: '|' },
   { id: 'CapsLock', value: 'CapsLock' },
-  { id: 'KeyA', value: 'a' },
-  { id: 'KeyS', value: 's' },
-  { id: 'KeyD', value: 'd' },
-  { id: 'KeyF', value: 'f' },
-  { id: 'KeyG', value: 'g' },
-  { id: 'KeyH', value: 'h' },
-  { id: 'KeyJ', value: 'j' },
-  { id: 'KeyK', value: 'k' },
-  { id: 'KeyL', value: 'l' },
-  { id: 'Semicolon', value: ';', alt: ':' },
-  { id: 'Quote', value: "'", alt: '"' },
+  { id: 'KeyA', value: 'a', ru: 'ф' },
+  { id: 'KeyS', value: 's', ru: 'ы' },
+  { id: 'KeyD', value: 'd', ru: 'в' },
+  { id: 'KeyF', value: 'f', ru: 'а' },
+  { id: 'KeyG', value: 'g', ru: 'п' },
+  { id: 'KeyH', value: 'h', ru: 'р' },
+  { id: 'KeyJ', value: 'j', ru: 'о' },
+  { id: 'KeyK', value: 'k', ru: 'л' },
+  { id: 'KeyL', value: 'l', ru: 'д' },
+  {
+    id: 'Semicolon',
+    value: ';',
+    alt: ':',
+    ru: 'ж',
+  },
+  {
+    id: 'Quote',
+    value: "'",
+    alt: '"',
+    ru: 'э',
+  },
   { id: 'Enter', value: 'Enter' },
   { id: 'ShiftLeft', value: 'Shift' },
   { id: 'KeyZ', value: 'z', ru: 'я' },
-  { id: 'KeyX', value: 'x' },
-  { id: 'KeyC', value: 'c' },
-  { id: 'KeyV', value: 'v' },
-  { id: 'KeyB', value: 'b' },
-  { id: 'KeyN', value: 'n' },
-  { id: 'KeyM', value: 'm' },
-  { id: 'Comma', value: ',', alt: '<' },
-  { id: 'Period', value: '.', alt: '>' },
+  { id: 'KeyX', value: 'x', ru: 'ч' },
+  { id: 'KeyC', value: 'c', ru: 'с' },
+  { id: 'KeyV', value: 'v', ru: 'м' },
+  { id: 'KeyB', value: 'b', ru: 'и' },
+  { id: 'KeyN', value: 'n', ru: 'т' },
+  { id: 'KeyM', value: 'm', ru: 'ь' },
+  {
+    id: 'Comma',
+    value: ',',
+    alt: '<',
+    ru: 'б',
+  },
+  {
+    id: 'Period', value: '.', alt: '>', ru: 'ю',
+  },
   { id: 'Slash', value: '/', alt: '?' },
   { id: 'ArrowUp', value: '▲' },
   { id: 'ShiftRight', value: 'Shift' },
@@ -98,39 +125,78 @@ function renderButtons(data) {
 
   data.forEach((el) => {
     const keyButton = document.createElement('div');
-    const keySpanButton = document.createElement('span');
+    const keyButtonEn = document.createElement('div');
+    const keyButtonRu = document.createElement('div');
+    const keySpanButtonEN = document.createElement('span');
+    const keySpanButtonRu = document.createElement('span');
     const keySpanAlt = document.createElement('span');
-    keySpanAlt.className = `${el.id} alt hidden`;
-    keySpanButton.className = `${el.id}`;
+    const keySpanAltRu = document.createElement('span');
+
+    keyButtonRu.className = 'ru hidden';
+    keyButtonEn.className = 'en ';
+    keySpanAlt.className = 'alt en hidden';
+    keySpanAltRu.className = 'alt ru hidden';
+
+    keySpanButtonEN.textContent = el.value;
+    keySpanButtonRu.textContent = el.value;
+    keySpanAlt.textContent = el.alt;
+    keySpanAltRu.textContent = el.alt;
+
+    keySpanButtonEN.className = `${el.id} en`;
+    keySpanButtonRu.className = `${el.id} ru hidden`;
     keyButton.className = `key ${el.id}`;
     if (el.id === 'Backspace' || el.id === 'Tab' || el.id === 'ShiftRight' || el.id === 'ShiftLeft' || el.id === 'CapsLock' || el.id === 'Enter') {
       keyButton.className += ' key-large';
+      keySpanButtonEN.className += ' key-large';
+      keySpanButtonRu.className += ' key-large';
     }
-    if (el.id === 'Backspace' || el.id === 'Tab' || el.id === 'ShiftRight' || el.id === 'ShiftLeft' || el.id === 'CapsLock' || el.id === 'Enter') {
-      keySpanButton.className += ' key-large';
+    if (el.id === 'Space') {
+      keyButton.className += ' key-space';
+      keySpanButtonEN.className += ' key-space';
+      keySpanButtonRu.className += ' key-space';
     }
-    if (el.id === 'Space') keyButton.className += ' key-space';
-    if (el.id === 'Space') keySpanButton.className += ' key-space';
-    if (el.id[0] === 'K') keySpanButton.className += ' character';
+    if (el.id[0] === 'K') {
+      keySpanButtonEN.className += ' en character';
+      keySpanButtonRu.className += ' ru hidden character';
+      keySpanButtonRu.textContent = el.ru;
+    }
+
+    if (el.id === 'BracketLeft' || el.id === 'BracketRight' || el.id === 'Semicolon' || el.id === 'Quote' || el.id === 'Comma' || el.id === 'Period') {
+      keySpanButtonRu.className += ' character';
+      keySpanButtonRu.textContent = el.ru;
+    }
     if (
-      el.id[0] === 'D' || el.id === 'Backquote' || el.id === 'Minus' || el.id === 'Equal' || el.id === 'BracketLeft' || el.id === 'BracketRight'
-      || el.id === 'Backslash' || el.id === 'Semicolon' || el.id === 'Quote' || el.id === 'Comma' || el.id === 'Period' || el.id === 'Slash'
+      el.id === 'BracketLeft' || el.id === 'BracketRight' || el.id === 'Semicolon' || el.id === 'Quote' || el.id === 'Comma' || el.id === 'Period'
+      || el.id === 'Slash' || el.id === 'Backquote' || el.id === 'Minus' || el.id === 'Equal' || el.id === 'Backslash' || el.id[0] === 'D'
     ) {
-      keySpanButton.className = `${el.id} main`;
-      keySpanAlt.textContent = el.alt;
-      keyButton.append(keySpanAlt);
+      keySpanButtonEN.className += ' main';
+      keyButtonEn.append(keySpanAlt);
     }
-    keySpanButton.textContent = el.value;
-    keyButton.append(keySpanButton);
+    if (el.id === 'Slash' || el.id === 'Backquote' || el.id === 'Minus' || el.id === 'Equal' || el.id === 'Backslash' || el.id[0] === 'D') {
+      keySpanButtonRu.className += ' main';
+      keyButtonRu.append(keySpanAltRu);
+    }
+    keyButtonRu.append(keySpanButtonRu);
+    keyButtonEn.append(keySpanButtonEN);
+
+    keyButton.append(keyButtonEn);
+    keyButton.append(keyButtonRu);
+
     keyboard.append(keyButton);
   });
 }
 
 renderButtons(dataButtonsEn);
 
+let flag = false;
+// let caps = false;
+
 function keyDownClickHandler() {
   const keySpan = document.querySelectorAll('span');
-  // const key = document.querySelectorAll('div');
+  // const main = document.querySelectorAll('.main');
+  // const alt = document.querySelectorAll('.alt');
+  const ru = document.querySelectorAll('.ru');
+  const en = document.querySelectorAll('.en');
   window.addEventListener('keydown', (e) => {
     TEXT_AREA.focus();
     keySpan.forEach((el) => {
@@ -148,6 +214,17 @@ function keyDownClickHandler() {
         e.preventDefault();
         TEXT_AREA.setRangeText(el.textContent.toUpperCase(), TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
         TEXT_AREA.focus();
+      }
+
+      if (e.code === 'ControlLeft') flag = true;
+      if (e.code === 'AltLeft' && flag) {
+        flag = false;
+        en.forEach((eng) => {
+          eng.classList.toggle('hidden');
+        });
+        ru.forEach((rus) => {
+          rus.classList.toggle('hidden');
+        });
       }
 
       if (e.code === 'Tab') {
@@ -217,6 +294,8 @@ function mouseUpClickHandler() {
   const char = document.querySelectorAll('.character');
   const main = document.querySelectorAll('.main');
   const alt = document.querySelectorAll('.alt');
+  const ru = document.querySelectorAll('.ru');
+  const en = document.querySelectorAll('.en');
 
   key.forEach((el) => {
     el.addEventListener('mouseup', () => {
@@ -225,8 +304,8 @@ function mouseUpClickHandler() {
       if (
         !el.classList.contains('upper-case') && !el.classList.contains('Enter') && !el.classList.contains('Backspace') && !el.classList.contains('Delete')
         && !el.classList.contains('Space') && !el.classList.contains('Tab') && !el.classList.contains('CapsLock') && !el.classList.contains('ShiftLeft')
-        && !el.classList.contains('ShiftRight') && !el.classList.contains('AltLeft') && !el.classList.contains('AltRight')
-        && !el.classList.contains('ControlLeft') && !el.classList.contains('ControlRight') && !el.classList.contains('MetaLeft')
+        && !el.classList.contains('ShiftRight') && !el.classList.contains('AltLeft') && !el.classList.contains('AltRight') && !el.classList.contains('ControlLeft')
+        && !el.classList.contains('ControlRight') && !el.classList.contains('MetaLeft')
       ) {
         TEXT_AREA.setRangeText(el.textContent, TEXT_AREA.selectionStart, TEXT_AREA.selectionEnd, 'end');
         TEXT_AREA.focus();
@@ -287,6 +366,15 @@ function mouseUpClickHandler() {
         });
       }
 
+      if (el.classList.contains('ControlLeft')) {
+        en.forEach((eng) => {
+          eng.classList.remove('hidden');
+        });
+        ru.forEach((rus) => {
+          rus.classList.add('hidden');
+        });
+      }
+
       if (!el.classList.contains('CapsLock')) {
         el.classList.remove('key-active');
       }
@@ -305,6 +393,15 @@ function mouseUpClickHandler() {
         });
         alt.forEach((al) => {
           al.classList.remove('hidden');
+        });
+      }
+
+      if (el.classList.contains('ControlLeft')) {
+        en.forEach((eng) => {
+          eng.classList.add('hidden');
+        });
+        ru.forEach((rus) => {
+          rus.classList.remove('hidden');
         });
       }
     });

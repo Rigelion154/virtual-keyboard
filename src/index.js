@@ -179,7 +179,7 @@ function renderButtons(data) {
     if (el.id === 'BracketLeft' || el.id === 'BracketRight' || el.id === 'Semicolon' || el.id === 'Quote' || el.id === 'Comma' || el.id === 'Period') {
       keySpanMain.textContent = el.value;
       keyButton.append(keySpanMain);
-      keySpanMain.classList = ' en';
+      keySpanMain.classList = `${el.id} en`;
       keySpanButtonRu.textContent = el.ru;
       keyButtonRu.append(keySpanButtonRu);
       keyButton.append(keyButtonRu);
